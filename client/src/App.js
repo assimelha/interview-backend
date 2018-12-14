@@ -5,7 +5,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      login: true, // switch between Login and SignUp
+      login: false, // switch between Login and SignUp
       email: '',
       password: '',
       name: '',
