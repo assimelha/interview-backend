@@ -35,6 +35,13 @@ app.use(
   bodyParser.json(),
   graphqlExpress({ schema: myGraphQLSchema }),
 );
+
+app.post(
+  '/login', (req, res) => {
+    res.send(req.body).end();
+  }
+);
+
 app.get('/graphiql', graphiqlExpress({ endpointURL: '/graphql' })); // if you want GraphiQL enabled
 
 app.listen(process.env.PORT, () => {
