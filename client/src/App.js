@@ -1,5 +1,15 @@
 import React, { Component } from 'react';
-import './scss/main.scss';
+import { createGlobalStyle } from 'styled-components';
+import Wrapper from './components/Wrapper';
+import Title from './components/Title';
+import Paragraph from './components/Paragraph';
+import Button from './components/Button';
+import Icon from './components/Icon';
+import FormGroup from './components/FormGroup';
+import Label from './components/Label';
+import Input from './components/Input';
+import Link from './components/Link';
+import CheckLogin from './components/CheckLogin';
 
 class App extends Component {
   constructor(props) {
@@ -15,14 +25,8 @@ class App extends Component {
     this.submit = this.submit.bind(this);
   }
 
-  handleChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value
-    });
+  handleChange(field, value) {
+    this.setState({ [field]: value });
   }
 
   handleLoginClick() {
@@ -31,86 +35,93 @@ class App extends Component {
 
   submit() {
     if (this.state.login) {
-      this.login()
+      console.log(`Login: Email: ${this.state.email}, Pass: ${this.state.password}`)  
     }else {
-      // sign up
+      console.log(`Sign Up: Name: ${this.state.name}, Email: ${this.state.email}, Pass: ${this.state.password}`)  
     }
-  }
-
-  login = async (e) => {
-
-    const response = await fetch('/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email: this.state.email, password: this.state.password }),
-    });
-    const body = await response.text();
-
-    console.log(body)
-  }  
+  } 
 
   render() {
     const { login, email, password, name } = this.state
 
+    const GlobalStyle = createGlobalStyle`
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #454857;
+        font-family: 'Libre Franklin';
+        font-size: 13px;	
+        font-weight: 600;
+      }
+    `;
+ 
     return (
-      <div className="App">
-        <div className="SignUp">
-          <h1 className="primary-heading">{!login ? 'Sign Up' : 'Login'}</h1>
+      <Wrapper>
+      <GlobalStyle />
+        <Title>
+          {!login ? 'Sign Up' : 'Login'}
+        </Title>
+        <Paragraph>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
+        </Paragraph> 
 
-          <p className="paragraph">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+        <Button prime>
+          <Icon className="fas fa-university"></Icon>
+          Continue with BankID
+        </Button>
 
-          <a href="#0" className="btn btn-dark-blue">Continue with BankID</a>
-          <a href="#0" className="btn btn-fb-blue">Continue with Facebook</a>
+        <Button>
+          <Icon className="fab fa-facebook"></Icon>
+          Continue with Facebook
+        </Button>
 
-          <div>
-            <form className="form">
-              <div className="u-margin-top-bottom-small">
-                <h2 className="secondary-heading">
-                  {!login ? 'Sign Up' : 'Login'} using email
-                </h2>
-              </div>
+        <Title withPadding>
+          {!login ? 'Sign Up' : 'Login'} using email
+        </Title>
 
-              {!login &&
-                <div className="form__group">
-                  <input name="name" id="name" type="text" className="form__input" placeholder="Full Name" onChange={this.handleChange} value={name} required />
-                  <label for="name" className="form__label">First & Last Name</label>
-                </div>
-              }
+        {!login &&
+          <FormGroup>
+            <Label>
+              First & Last Name
+            </Label>
 
+            <Input type="text" name="name" onChange={this.handleChange} value={name}></Input>
+          </FormGroup>
+        }
 
-              <div className="form__group">
-                <input name="email" id="email" type="email" className="form__input" placeholder="Email" onChange={this.handleChange} value={email} required />
-                <label for="email" className="form__label">Email</label>
-              </div>
+        <FormGroup>
+          <Label>
+            Email
+          </Label>
 
-              <div className="form__group">
-                <input name="password" id="password" type="password" className="form__input" placeholder="Password" onChange={this.handleChange} value={password} required />
-                <label for="password" className="form__label">Password</label>
-              </div>
+          <Input type="email" name="email" onChange={this.handleChange} value={email}></Input>
+        </FormGroup>
 
-              <div className="form__group">
-                <input id="terms" type="checkbox" className="form__checkbox" required />
-                <label for="terms" className="">
-                  I have read and I accept the
-                                  <a href="#0">Terms and conditions</a>
-                </label>
-              </div>
+        <FormGroup>
+          <Label>
+            Password
+          </Label>
 
-              <div className="u-margin-top-bottom-small">
-                <a className="btn btn-light-blue" href="#0" onClick={this.submit}>{!login ? 'Create Account' : 'Login'}</a>
-              </div>
-            </form>
-          </div>
-        </div>
-        <span>
-          {!login ? "Already have an account?" : "Stil not a member?"}
-          <a href="#0" onClick={this.handleLoginClick}>
-            {!login ? "Login" : "Sign up"}
-          </a>
-        </span>
-      </div>
+          <Input type="password" name="password" onChange={this.handleChange} value={password}></Input>
+        </FormGroup>
+
+        <FormGroup>
+          <Input id="terms" type="checkbox" checkbox></Input>
+
+          <Label htmlFor="terms">
+            I have read and I accept the <Link>terms and conditions</Link>
+          </Label>
+        </FormGroup>
+
+        <Button submit onClick={this.submit}>
+          {!login ? 'Create Account' : 'Login'}
+        </Button>
+
+        <CheckLogin>
+          {!login ? "Already have an account? " : "Stil not a member? "}
+          <Link onClick={this.handleLoginClick}>{!login ? "Login" : "Sign up"}</Link>
+        </CheckLogin>
+      </Wrapper>
     );
   }
 }
